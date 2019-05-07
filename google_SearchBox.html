@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>JS Bin</title>
+  <script>
+	var placeSearch, autocomplete, geocoder;
+	var hello;
+	function initAutocomplete() {
+		geocoder = new google.maps.Geocoder();
+		autocomplete = new google.maps.places.Autocomplete(
+			(document.getElementById('autocomplete'))
+		);
+		autocomplete.addListener('place_changed', fillInAddress);
+	}
+
+	function codeAddress(address) {
+		geocoder.geocode( { 'address': address}, function(results, status) {
+		  if (status == 'OK') {
+			let latlng = JSON.stringify(results[0].geometry.location);
+			latlng = JSON.parse(latlng);
+			document.getElementById("location").innerHTML = 'Lat:' +latlng['lat'] + '<br>Lng' +latlng['lng'];
+		  } else {
+			alert('Geocode was not successful for the following reason: ' + status);
+		  }
+		});
+	  }
+
+	function fillInAddress() {
+	  var place = autocomplete.getPlace();
+	  codeAddress(document.getElementById('autocomplete').value);
+	}
+  </script>
+</head>
+<body>
+  <div id="locationField">
+    <input id="autocomplete" placeholder="Enter your address" type="text"/>
+  </div>
+  <span id="location"></span>
+  <button type="button">Click Me!</button>
+  
+  <script src="https://maps.googleapis.com/maps/api/js?key=<KEY>&libraries=places&callback=initAutocomplete" async defer></script>
+</body>
+<script src="./analytics.js"></script>
+</html>
